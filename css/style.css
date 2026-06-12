@@ -148,6 +148,13 @@ a { color: inherit; }
   background: radial-gradient(circle, rgba(0,200,160,.07) 0%, transparent 65%);
   pointer-events: none;
 }
+.hero-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 3vh;
+}
 .hero-meta {
   font-size: 12px;
   letter-spacing: 3px;
@@ -156,7 +163,6 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 3vh;
 }
 .pulse-dot {
   width: 8px; height: 8px;
@@ -214,9 +220,6 @@ a { color: inherit; }
   line-height: 1.8;
 }
 .hero-scroll {
-  position: absolute;
-  bottom: 40px;
-  right: var(--pad);
   display: flex;
   flex-direction: column;
   align-items: center;
