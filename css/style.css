@@ -329,6 +329,70 @@ a { color: inherit; }
   transition: transform 1s var(--ease);
 }
 .project-visual:hover .visual-art { transform: scale(1.08); }
+
+/* Photo layer — sits over the SVG art when the image exists; the SVG
+   remains as the fallback if the photo is missing */
+.visual-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 1s var(--ease);
+  filter: grayscale(.45) brightness(.72) contrast(1.08) saturate(.85);
+}
+.project-visual:hover .visual-photo { transform: scale(1.08); }
+
+/* Duotone tint that pulls the photo into the page palette */
+.visual-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(20deg, rgba(13,15,18,.82) 0%, rgba(13,15,18,.15) 55%, transparent 100%);
+}
+.visual-arcs .visual-tint {
+  background:
+    linear-gradient(20deg, rgba(13,15,18,.82) 0%, rgba(13,15,18,.15) 55%, transparent 100%),
+    linear-gradient(135deg, rgba(6,46,38,.55) 0%, rgba(0,200,160,.14) 100%);
+}
+.visual-lines .visual-tint {
+  background:
+    linear-gradient(20deg, rgba(13,15,18,.82) 0%, rgba(13,15,18,.15) 55%, transparent 100%),
+    linear-gradient(135deg, rgba(10,29,51,.55) 0%, rgba(0,120,255,.14) 100%);
+}
+
+/* Sensor data overlay — always on top of photo or fallback art */
+.visual-data {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.data-pt {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: .5px;
+  color: var(--accent);
+  text-shadow: 0 1px 6px rgba(0,0,0,.85);
+  white-space: nowrap;
+}
+.data-pt::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(0,200,160,.55);
+}
+.data-pt.data-blue { color: var(--accent2); }
+.data-pt.data-blue::before {
+  background: var(--accent2);
+  box-shadow: 0 0 10px rgba(0,120,255,.55);
+}
 .project-num {
   position: absolute;
   bottom: 14px;
