@@ -340,7 +340,7 @@ a { color: inherit; }
   object-fit: cover;
   transform: scale(1.02);
   transition: transform 1s var(--ease);
-  filter: grayscale(.45) brightness(.72) contrast(1.08) saturate(.85);
+  filter: grayscale(.3) brightness(.82) contrast(1.06) saturate(.85);
 }
 .project-visual:hover .visual-photo { transform: scale(1.08); }
 
@@ -354,13 +354,13 @@ a { color: inherit; }
 }
 .visual-arcs .visual-tint {
   background:
-    linear-gradient(20deg, rgba(13,15,18,.82) 0%, rgba(13,15,18,.15) 55%, transparent 100%),
-    linear-gradient(135deg, rgba(6,46,38,.55) 0%, rgba(0,200,160,.14) 100%);
+    linear-gradient(20deg, rgba(13,15,18,.7) 0%, rgba(13,15,18,.1) 50%, transparent 100%),
+    linear-gradient(135deg, rgba(6,46,38,.4) 0%, rgba(0,200,160,.1) 100%);
 }
 .visual-lines .visual-tint {
   background:
-    linear-gradient(20deg, rgba(13,15,18,.82) 0%, rgba(13,15,18,.15) 55%, transparent 100%),
-    linear-gradient(135deg, rgba(10,29,51,.55) 0%, rgba(0,120,255,.14) 100%);
+    linear-gradient(20deg, rgba(13,15,18,.7) 0%, rgba(13,15,18,.1) 50%, transparent 100%),
+    linear-gradient(135deg, rgba(10,29,51,.4) 0%, rgba(0,120,255,.1) 100%);
 }
 
 /* Sensor data overlay — always on top of photo or fallback art */
