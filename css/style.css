@@ -17,7 +17,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 html.lenis { height: auto; scroll-behavior: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
@@ -138,6 +138,7 @@ a { color: inherit; }
   justify-content: flex-end;
   padding: 120px var(--pad) 40px;
   position: relative;
+  overflow: hidden;
 }
 .hero::after {
   content: '';
@@ -177,7 +178,7 @@ a { color: inherit; }
 .hero-name {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: clamp(58px, 13.5vw, 190px);
+  font-size: clamp(40px, 14.5vw, 190px);
   line-height: .92;
   letter-spacing: -.04em;
   text-transform: uppercase;
@@ -277,6 +278,7 @@ a { color: inherit; }
 /* ── SECTIONS ── */
 .section {
   padding: clamp(80px, 12vh, 150px) var(--pad) 40px;
+  scroll-margin-top: 70px;
 }
 .section-head {
   display: flex;
@@ -671,6 +673,21 @@ a { color: inherit; }
   .xp-row { grid-template-columns: 1fr; gap: 10px; }
   .cap-grid { grid-template-columns: 1fr; }
   .hero-scroll { display: none; }
+  .data-pt { font-size: 10px; }
+}
+
+@media (max-width: 640px) {
+  .nav { padding: 14px 20px; }
+  .nav.scrolled { padding-top: 10px; padding-bottom: 10px; }
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 10px; letter-spacing: 1px; }
+  .hero { padding-top: 96px; }
+  .hero-bottom { padding-top: 18px; }
+}
+
+@media (max-width: 380px) {
+  .nav-links { gap: 9px; }
+  .nav-links a { letter-spacing: .5px; }
 }
 
 /* ── REDUCED MOTION ── */
