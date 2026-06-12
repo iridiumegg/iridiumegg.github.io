@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nathan Stewart — Controls Engineer &amp; Projects Manager</title>
-<meta name="description" content="Nathan Stewart — building automation engineer in Northwest Arkansas. Niagara 4, MS/TP integration, and end-to-end BAS delivery for cultural and commercial sites.">
+<meta name="description" content="Nathan Stewart — building automation engineer in Northwest Arkansas. End-to-end BAS delivery for cultural and commercial sites.">
 <meta property="og:title" content="Nathan Stewart — Controls Engineer & Projects Manager">
 <meta property="og:description" content="Building automation engineering & project delivery. Crystal Bridges Museum BAS retrofit · Frank Lloyd Wright house recontrol.">
 <meta property="og:type" content="website">
@@ -24,6 +24,23 @@
 </head>
 <body>
 
+<!-- LOADER -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-inner">
+    <span class="loader-label">Initializing building systems</span>
+    <span class="loader-pct" id="loaderPct">0%</span>
+    <span class="loader-bar"><i id="loaderBar"></i></span>
+  </div>
+</div>
+
+<!-- 3D SCENE -->
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="scene-vignette" aria-hidden="true"></div>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 <!-- NAV -->
 <nav class="nav" id="nav">
   <a href="#top" class="nav-logo">NS<span class="nav-logo-dot">.</span></a>
@@ -31,288 +48,252 @@
     <a href="#work" data-nav>Work</a>
     <a href="#experience" data-nav>Experience</a>
     <a href="#capabilities" data-nav>Capabilities</a>
-    <a href="#contact" data-nav class="nav-cta">Contact</a>
+    <a href="#contact" data-nav class="nav-cta" data-magnetic>Contact</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<header class="hero" id="top">
-  <div class="hero-inner">
-    <div class="hero-meta-row">
-      <div class="hero-meta" data-reveal>
-        <span class="pulse-dot"></span>
-        Northwest Arkansas — Building Automation
+<main id="top">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-meta-row">
+        <div class="hero-meta" data-reveal>
+          <span class="pulse-dot"></span>
+          Northwest Arkansas — Building Automation
+        </div>
+        <div class="hero-scroll" data-reveal>
+          <span>Scroll</span>
+          <span class="hero-scroll-line"></span>
+        </div>
       </div>
-      <div class="hero-scroll" data-reveal style="--d:.6s">
-        <span>Scroll</span>
-        <span class="hero-scroll-line"></span>
+      <h1 class="hero-name" aria-label="Nathan Stewart">
+        <span class="line-mask"><span class="line">Nathan</span></span>
+        <span class="line-mask"><span class="line line-outline">Stewart</span></span>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-role" data-reveal>Controls Engineer<br>&amp; Projects Manager</p>
+        <p class="hero-summary" data-reveal>
+          Versatile building automation engineer with a proven track record across
+          commercial, cultural, and industrial settings — leading critical projects
+          and delivering hands-on engineering from scope and design through
+          commissioning and handoff.
+        </p>
       </div>
     </div>
-    <h1 class="hero-name">
-      <span class="line-mask"><span class="line" data-reveal style="--d:.1s">Nathan</span></span>
-      <span class="line-mask"><span class="line line-outline" data-reveal style="--d:.22s">Stewart</span></span>
-    </h1>
-    <div class="hero-bottom">
-      <p class="hero-role" data-reveal style="--d:.38s">Controls Engineer<br>&amp; Projects Manager</p>
-      <p class="hero-summary" data-reveal style="--d:.46s">
-        Versatile building automation engineer with a proven track record across
-        commercial, cultural, and industrial settings — leading critical projects
-        and delivering hands-on engineering from scope and design through
-        commissioning and handoff.
-      </p>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>MODBUS + BACNET + LON + IP + HARDWARE + SOFTWARE + VFDS + INTEGRATION + PROGRAMMING + LOGIC + PROJECT MANAGEMENT + DESIGN + GRAPHICS + OPERATIONS +&nbsp;</span><span>MODBUS + BACNET + LON + IP + HARDWARE + SOFTWARE + VFDS + INTEGRATION + PROGRAMMING + LOGIC + PROJECT MANAGEMENT + DESIGN + GRAPHICS + OPERATIONS +&nbsp;</span>
     </div>
   </div>
-</header>
 
-<!-- MARQUEE -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span>MODBUS + BACNET + LON + IP + HARDWARE + SOFTWARE + VFDS + INTEGRATION + PROGRAMMING + LOGIC + PROJECT MANAGEMENT + DESIGN + GRAPHICS + OPERATIONS +&nbsp;</span><span>MODBUS + BACNET + LON + IP + HARDWARE + SOFTWARE + VFDS + INTEGRATION + PROGRAMMING + LOGIC + PROJECT MANAGEMENT + DESIGN + GRAPHICS + OPERATIONS +&nbsp;</span>
-  </div>
-</div>
+  <!-- WORK -->
+  <section class="section" id="work">
+    <div class="section-head" data-reveal>
+      <span class="section-index">01</span>
+      <h2 class="section-title" data-shift>Selected Work</h2>
+    </div>
 
-<!-- WORK -->
-<section class="section" id="work">
-  <div class="section-head" data-reveal>
-    <span class="section-index">01</span>
-    <h2 class="section-title">Selected Work</h2>
-  </div>
+    <article class="project">
+      <a class="project-visual visual-arcs" href="#contact" data-tilt aria-label="Crystal Bridges Museum project — get in touch">
+        <img class="visual-photo" data-parallax src="img/crystal-bridges.jpg" alt="Aerial view of Crystal Bridges Museum">
+        <span class="visual-tint" aria-hidden="true"></span>
+        <span class="visual-data" aria-hidden="true">
+          <span class="data-pt" style="left:58%; top:28%">AHU-07 · 52.1°F SAT</span>
+          <span class="data-pt data-blue" style="left:26%; top:68%">RH 50.2% · GALLERY 4</span>
+        </span>
+      </a>
+      <div class="project-info">
+        <div class="project-meta" data-reveal>
+          <span class="tag tag-green">ES2 · Bentonville, AR</span>
+          <span class="tag tag-gray">Cultural</span>
+        </div>
+        <h3 class="project-title" data-reveal>Crystal Bridges Museum</h3>
+        <p class="project-desc" data-reveal>
+          Full BAS retrofit and reengineering of a world-class art museum — precision
+          environmental control where a fraction of a degree and humidity matters.
+        </p>
+        <div class="project-tags" data-reveal>
+          <span class="chip">BAS Retrofit</span>
+          <span class="chip">Logic Programming</span>
+          <span class="chip">Graphics</span>
+          <span class="chip">Database</span>
+          <span class="chip">Project Management</span>
+        </div>
+      </div>
+    </article>
 
-  <!-- Crystal Bridges -->
-  <article class="project" data-reveal>
-    <a class="project-visual visual-arcs" href="#contact" aria-label="Crystal Bridges Museum project — get in touch">
-      <svg class="visual-art" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs>
-          <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#0d0f12"/><stop offset="1" stop-color="#062e26"/>
-          </linearGradient>
-        </defs>
-        <rect width="1200" height="600" fill="url(#gA)"/>
-        <g fill="none" stroke="#00c8a0" stroke-opacity=".35">
-          <path d="M-100 620 Q 300 80 700 620" stroke-width="2"/>
-          <path d="M60 620 Q 460 140 860 620" stroke-width="1.5"/>
-          <path d="M220 620 Q 620 200 1020 620" stroke-width="1.5"/>
-          <path d="M380 620 Q 780 260 1180 620" stroke-width="1"/>
-          <path d="M540 620 Q 940 320 1340 620" stroke-width="1"/>
-        </g>
-        <g stroke="#1e2329" stroke-width="1">
-          <line x1="0" y1="150" x2="1200" y2="150"/><line x1="0" y1="300" x2="1200" y2="300"/><line x1="0" y1="450" x2="1200" y2="450"/>
-          <line x1="300" y1="0" x2="300" y2="600"/><line x1="600" y1="0" x2="600" y2="600"/><line x1="900" y1="0" x2="900" y2="600"/>
-        </g>
-      </svg>
-      <img class="visual-photo" src="img/crystal-bridges.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
-      <span class="visual-tint" aria-hidden="true"></span>
-      <span class="visual-data" aria-hidden="true">
-        <span class="data-pt" style="left:58%; top:28%">AHU-07 · 52.1°F SAT</span>
-        <span class="data-pt data-blue" style="left:26%; top:68%">RH 50.2% · GALLERY 4</span>
-      </span>
+    <article class="project project-flip">
+      <a class="project-visual visual-lines" href="#contact" data-tilt aria-label="Frank Lloyd Wright house project — get in touch">
+        <img class="visual-photo" data-parallax src="img/bachman-wilson.jpg" alt="Interior of the Bachman-Wilson House">
+        <span class="visual-tint" aria-hidden="true"></span>
+        <span class="visual-data" aria-hidden="true">
+          <span class="data-pt" style="left:36%; top:25%">ROOM TEMP 70.9°F</span>
+        </span>
+      </a>
+      <div class="project-info">
+        <div class="project-meta" data-reveal>
+          <span class="tag tag-blue">ES2 · Bentonville, AR</span>
+          <span class="tag tag-gray">Historic</span>
+        </div>
+        <h3 class="project-title" data-reveal>Frank Lloyd Wright House</h3>
+        <p class="project-desc" data-reveal>
+          Recontrol of the historic Bachman-Wilson Usonian residence — modern building
+          automation woven invisibly into protected architecture. Engineering controls
+          that preserve a landmark while keeping its environment stable year-round.
+        </p>
+        <div class="project-tags" data-reveal>
+          <span class="chip">BAS Retrofit</span>
+          <span class="chip">Logic Programming</span>
+          <span class="chip">Graphics</span>
+          <span class="chip">Database</span>
+          <span class="chip">Project Management</span>
+          <span class="chip">Historic Preservation</span>
+        </div>
+      </div>
+    </article>
+
+    <div class="work-grid">
+      <div class="work-card" data-reveal>
+        <span class="work-card-index">+</span>
+        <h4>Commercial &amp; Institutional BMS</h4>
+      </div>
+      <div class="work-card" data-reveal>
+        <span class="work-card-index">+</span>
+        <h4>Large-Scale Multi-Site Deployments</h4>
+      </div>
+      <div class="work-card" data-reveal>
+        <span class="work-card-index">+</span>
+        <h4>Critical Space Design</h4>
+      </div>
+      <div class="work-card" data-reveal>
+        <span class="work-card-index">+</span>
+        <h4>Strategic Logic Applications</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="section-head" data-reveal>
+      <span class="section-index">02</span>
+      <h2 class="section-title" data-shift>Experience</h2>
+    </div>
+
+    <div class="xp-list">
+      <div class="xp-row" data-reveal>
+        <div class="xp-left">
+          <span class="xp-company">ES2</span>
+        </div>
+        <div class="xp-right">
+          <span class="xp-role">Controls Engineer &amp; Projects Manager</span>
+          <p>Hybrid role combining engineering with full project management responsibility.
+          Leading critical retrofit and recontrol initiatives from scope and design through
+          commissioning and handoff on high-profile cultural and commercial sites.</p>
+        </div>
+      </div>
+      <div class="xp-row" data-reveal>
+        <div class="xp-left">
+          <span class="xp-company">MCC</span>
+        </div>
+        <div class="xp-right">
+          <span class="xp-role">Controls Lead</span>
+          <p>Led BMS projects from installation through system delivery. Designed programs,
+          graphics, and schematics for complex third-party integrations. Primary point of
+          contact for commissioning and client handoff.</p>
+        </div>
+      </div>
+      <div class="xp-row" data-reveal>
+        <div class="xp-left">
+          <span class="xp-company">HB Controls</span>
+        </div>
+        <div class="xp-right">
+          <span class="xp-role">Controls Lead</span>
+          <p>Oversaw regional large-scale commercial BMS projects. Improved QA processes and
+          internal communication pipelines to streamline multi-site deployments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section class="section" id="capabilities">
+    <div class="section-head" data-reveal>
+      <span class="section-index">03</span>
+      <h2 class="section-title" data-shift>Capabilities</h2>
+    </div>
+
+    <div class="cap-grid">
+      <div class="cap-col" data-reveal>
+        <h3 class="cap-label">Skills</h3>
+        <div class="skill-item"><span>Logic / Programming</span><span class="pips" data-level="5"></span></div>
+        <div class="skill-item"><span>Integration</span><span class="pips" data-level="5"></span></div>
+        <div class="skill-item"><span>Project Management</span><span class="pips" data-level="4"></span></div>
+        <div class="skill-item"><span>Graphics &amp; UI Design</span><span class="pips" data-level="4"></span></div>
+        <div class="skill-item"><span>Networking / Security</span><span class="pips" data-level="4"></span></div>
+        <div class="skill-item"><span>IoT / Hardware</span><span class="pips" data-level="3"></span></div>
+      </div>
+      <div class="cap-col" data-reveal>
+        <h3 class="cap-label">Certifications</h3>
+        <div class="cert-card">
+          <span class="cert-name">Niagara 4 (TCP)</span>
+          <span class="cert-issuer">Tridium University · Jul 2024</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">CompTIA Network+</span>
+          <span class="cert-issuer">CompTIA · Sep 2022</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">CompTIA Security+</span>
+          <span class="cert-issuer">CompTIA · Sep 2022</span>
+        </div>
+      </div>
+      <div class="cap-col" data-reveal>
+        <h3 class="cap-label">Education</h3>
+        <div class="cert-card">
+          <span class="cert-name">Navarro College / UNT</span>
+          <span class="cert-issuer">2006 – 2008</span>
+        </div>
+        <h3 class="cap-label cap-label-gap">Off the Clock</h3>
+        <div class="project-tags">
+          <span class="chip">Duck Farming</span>
+          <span class="chip">IoT</span>
+          <span class="chip">Hiking</span>
+          <span class="chip">Gaming</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer class="contact" id="contact">
+    <div class="section-head" data-reveal>
+      <span class="section-index">04</span>
+      <h2 class="section-title" data-shift>Contact</h2>
+    </div>
+    <p class="contact-kicker" data-reveal>Have a building that needs a brain?</p>
+    <a class="contact-big" href="mailto:nhstewart@proton.me" data-magnetic data-reveal>
+      <span class="line-mask"><span class="line">Let's talk<span class="contact-arrow">&nearr;</span></span></span>
     </a>
-    <div class="project-info">
-      <div class="project-meta">
-        <span class="tag tag-green">ES2 · Bentonville, AR</span>
-        <span class="tag tag-gray">Cultural</span>
-      </div>
-      <h3 class="project-title">Crystal Bridges Museum</h3>
-      <p class="project-desc">
-        Full BAS retrofit and reengineering of a world-class art museum — precision
-        environmental control where a fraction of a degree and humidity matters.
-      </p>
-      <div class="project-tags">
-        <span class="chip">BAS Retrofit</span>
-        <span class="chip">Logic Programming</span>
-        <span class="chip">Graphics</span>
-        <span class="chip">Database</span>
-        <span class="chip">Project Management</span>
-      </div>
+    <div class="contact-links" data-reveal>
+      <a href="mailto:nhstewart@proton.me">nhstewart@proton.me</a>
+      <a href="https://github.com/iridiumegg" target="_blank" rel="noopener">github.com/iridiumegg</a>
     </div>
-  </article>
+    <div class="footer-bar">
+      <span>NS · BAS &amp; Controls Engineering · <span id="year">2026</span></span>
+      <a href="#top" class="back-top">Back to top ↑</a>
+    </div>
+  </footer>
 
-  <!-- Frank Lloyd Wright -->
-  <article class="project project-flip" data-reveal>
-    <a class="project-visual visual-lines" href="#contact" aria-label="Frank Lloyd Wright house project — get in touch">
-      <svg class="visual-art" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs>
-          <linearGradient id="gB" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#0d0f12"/><stop offset="1" stop-color="#0a1d33"/>
-          </linearGradient>
-        </defs>
-        <rect width="1200" height="600" fill="url(#gB)"/>
-        <g stroke="#0078ff" stroke-opacity=".4">
-          <line x1="0" y1="380" x2="1200" y2="380" stroke-width="3"/>
-          <line x1="0" y1="420" x2="1200" y2="420" stroke-width="1.5"/>
-          <line x1="100" y1="340" x2="1100" y2="340" stroke-width="1.5"/>
-          <line x1="220" y1="300" x2="980" y2="300" stroke-width="1"/>
-        </g>
-        <g fill="none" stroke="#1e2329" stroke-width="1">
-          <rect x="380" y="180" width="120" height="200"/>
-          <rect x="500" y="220" width="320" height="160"/>
-          <rect x="520" y="240" width="60" height="90" stroke="#0078ff" stroke-opacity=".5"/>
-          <rect x="600" y="240" width="60" height="90" stroke="#0078ff" stroke-opacity=".5"/>
-          <rect x="680" y="240" width="60" height="90" stroke="#0078ff" stroke-opacity=".5"/>
-        </g>
-      </svg>
-      <img class="visual-photo" src="img/bachman-wilson.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
-      <span class="visual-tint" aria-hidden="true"></span>
-      <span class="visual-data" aria-hidden="true">
-        <span class="data-pt" style="left:36%; top:25%">ROOM TEMP 70.9°F</span>
-      </span>
-    </a>
-    <div class="project-info">
-      <div class="project-meta">
-        <span class="tag tag-blue">ES2 · Bentonville, AR</span>
-        <span class="tag tag-gray">Historic</span>
-      </div>
-      <h3 class="project-title">Frank Lloyd Wright House</h3>
-      <p class="project-desc">
-        Recontrol of the historic Bachman-Wilson Usonian residence — modern building
-        automation woven invisibly into protected architecture. Engineering controls
-        that preserve a landmark while keeping its environment stable year-round.
-      </p>
-      <div class="project-tags">
-        <span class="chip">BAS Retrofit</span>
-        <span class="chip">Logic Programming</span>
-        <span class="chip">Graphics</span>
-        <span class="chip">Database</span>
-        <span class="chip">Project Management</span>
-        <span class="chip">Historic Preservation</span>
-      </div>
-    </div>
-  </article>
+</main>
 
-  <!-- Secondary work -->
-  <div class="work-grid">
-    <div class="work-card" data-reveal>
-      <span class="work-card-index">+</span>
-      <h4>Commercial &amp; Institutional BMS</h4>
-    </div>
-    <div class="work-card" data-reveal style="--d:.1s">
-      <span class="work-card-index">+</span>
-      <h4>Large-Scale Multi-Site Deployments</h4>
-    </div>
-    <div class="work-card" data-reveal style="--d:.2s">
-      <span class="work-card-index">+</span>
-      <h4>Critical Space Design</h4>
-    </div>
-    <div class="work-card" data-reveal style="--d:.3s">
-      <span class="work-card-index">+</span>
-      <h4>Strategic Logic Applications</h4>
-    </div>
-  </div>
-</section>
-
-<!-- EXPERIENCE -->
-<section class="section" id="experience">
-  <div class="section-head" data-reveal>
-    <span class="section-index">02</span>
-    <h2 class="section-title">Experience</h2>
-  </div>
-
-  <div class="xp-list">
-    <div class="xp-row" data-reveal>
-      <div class="xp-left">
-        <span class="xp-company">ES2</span>
-      </div>
-      <div class="xp-right">
-        <span class="xp-role">Controls Engineer &amp; Projects Manager</span>
-        <p>Hybrid role combining engineering with full project management responsibility.
-        Leading critical retrofit and recontrol initiatives from scope and design through
-        commissioning and handoff on high-profile cultural and commercial sites.</p>
-      </div>
-    </div>
-    <div class="xp-row" data-reveal>
-      <div class="xp-left">
-        <span class="xp-company">MCC</span>
-      </div>
-      <div class="xp-right">
-        <span class="xp-role">Controls Lead</span>
-        <p>Led BMS projects from installation through system delivery. Designed programs,
-        graphics, and schematics for complex third-party integrations. Primary point of
-        contact for commissioning and client handoff.</p>
-      </div>
-    </div>
-    <div class="xp-row" data-reveal>
-      <div class="xp-left">
-        <span class="xp-company">HB Controls</span>
-      </div>
-      <div class="xp-right">
-        <span class="xp-role">Controls Lead</span>
-        <p>Oversaw regional large-scale commercial BMS projects. Improved QA processes and
-        internal communication pipelines to streamline multi-site deployments.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CAPABILITIES -->
-<section class="section" id="capabilities">
-  <div class="section-head" data-reveal>
-    <span class="section-index">03</span>
-    <h2 class="section-title">Capabilities</h2>
-  </div>
-
-  <div class="cap-grid">
-    <div class="cap-col" data-reveal>
-      <h3 class="cap-label">Skills</h3>
-      <div class="skill-item"><span>Logic / Programming</span><span class="pips" data-level="5"></span></div>
-      <div class="skill-item"><span>Integration</span><span class="pips" data-level="5"></span></div>
-      <div class="skill-item"><span>Project Management</span><span class="pips" data-level="4"></span></div>
-      <div class="skill-item"><span>Graphics &amp; UI Design</span><span class="pips" data-level="4"></span></div>
-      <div class="skill-item"><span>Networking / Security</span><span class="pips" data-level="4"></span></div>
-      <div class="skill-item"><span>IoT / Hardware</span><span class="pips" data-level="3"></span></div>
-    </div>
-    <div class="cap-col" data-reveal style="--d:.1s">
-      <h3 class="cap-label">Certifications</h3>
-      <div class="cert-card">
-        <span class="cert-name">Niagara 4 (TCP)</span>
-        <span class="cert-issuer">Tridium University · Jul 2024</span>
-      </div>
-      <div class="cert-card">
-        <span class="cert-name">CompTIA Network+</span>
-        <span class="cert-issuer">CompTIA · Sep 2022</span>
-      </div>
-      <div class="cert-card">
-        <span class="cert-name">CompTIA Security+</span>
-        <span class="cert-issuer">CompTIA · Sep 2022</span>
-      </div>
-    </div>
-    <div class="cap-col" data-reveal style="--d:.2s">
-      <h3 class="cap-label">Education</h3>
-      <div class="cert-card">
-        <span class="cert-name">Navarro College / UNT</span>
-        <span class="cert-issuer">2006 – 2008</span>
-      </div>
-      <h3 class="cap-label cap-label-gap">Off the Clock</h3>
-      <div class="project-tags">
-        <span class="chip">Duck Farming</span>
-        <span class="chip">IoT</span>
-        <span class="chip">Hiking</span>
-        <span class="chip">Gaming</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<footer class="contact" id="contact">
-  <div class="section-head" data-reveal>
-    <span class="section-index">04</span>
-    <h2 class="section-title">Contact</h2>
-  </div>
-  <p class="contact-kicker" data-reveal>Have a building that needs a brain?</p>
-  <a class="contact-big" href="mailto:nhstewart@proton.me" data-reveal>
-    <span class="line-mask"><span class="line">Let's talk<span class="contact-arrow">&nearr;</span></span></span>
-  </a>
-  <div class="contact-links" data-reveal>
-    <a href="mailto:nhstewart@proton.me">nhstewart@proton.me</a>
-    <a href="https://github.com/iridiumegg" target="_blank" rel="noopener">github.com/iridiumegg</a>
-  </div>
-  <div class="footer-bar">
-    <span>NS · BAS &amp; Controls Engineering · <span id="year">2026</span></span>
-    <a href="#top" class="back-top">Back to top ↑</a>
-  </div>
-</footer>
-
-<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="js/vendor/three.min.js" defer></script>
+<script src="js/vendor/gsap.min.js" defer></script>
+<script src="js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="js/vendor/lenis.min.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>
