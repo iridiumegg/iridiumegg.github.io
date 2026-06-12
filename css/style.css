@@ -238,6 +238,27 @@ main, .nav, .marquee { position: relative; z-index: 2; }
   0%, 100% { box-shadow: 0 0 0 0 rgba(0,200,160,.5); }
   50% { box-shadow: 0 0 0 9px rgba(0,200,160,0); }
 }
+.hero-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(110px, 26vw, 300px);
+  line-height: .9;
+  letter-spacing: -.05em;
+  text-transform: uppercase;
+  margin-bottom: 3vh;
+}
+.hero-name .hn-solid {
+  background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-name .hn-outline {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 3px rgba(232, 234, 237, .85);
+  color: transparent;
+}
+.hero-name .hn-dot { color: var(--accent); }
 .hero-bottom {
   display: flex;
   justify-content: space-between;
