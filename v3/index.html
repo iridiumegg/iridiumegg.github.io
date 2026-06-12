@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NS.BAS — Nathan Stewart · Controls Engineer</title>
+<meta name="description" content="Nathan Stewart — building automation engineer in Northwest Arkansas.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23070a0d'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='bold' fill='%23ffb000' text-anchor='middle'%3ENS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070a0d;
+  --panel: #0c1116;
+  --line: #1d2731;
+  --amber: #ffb000;
+  --green: #2bd576;
+  --blue: #38a0ff;
+  --txt: #cfd8dc;
+  --dim: #62707a;
+  --pad: clamp(14px, 3.5vw, 40px);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+/* scanline texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+  z-index: 60;
+}
+a { color: inherit; }
+::selection { background: var(--amber); color: var(--bg); }
+
+/* ── SYSTEM BAR ── */
+.sysbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 1px;
+  height: 44px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sysbar::-webkit-scrollbar { display: none; }
+.sys-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border-right: 1px solid var(--line);
+  color: var(--amber);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sys-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: blink 2.4s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: .25; } }
+.sys-tabs { display: flex; align-items: stretch; }
+.sys-tabs a {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  text-decoration: none;
+  color: var(--dim);
+  border-right: 1px solid var(--line);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color .2s, background .2s;
+}
+.sys-tabs a:hover { color: var(--amber); background: rgba(255,176,0,.06); }
+.sys-clock {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: var(--dim);
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+/* ── PANELS ── */
+.wrap { padding: 64px var(--pad) 24px; max-width: 1280px; margin: 0 auto; }
+.panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  margin-bottom: 22px;
+  scroll-margin-top: 60px;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.panel-head .status { color: var(--green); display: flex; align-items: center; gap: 7px; letter-spacing: 1px; }
+.panel-head .status::before { content: '●'; animation: blink 2.4s steps(1) infinite; }
+.panel-body { padding: clamp(16px, 3vw, 30px); }
+
+/* ── HERO ── */
+.hero-name {
+  font-size: clamp(34px, 9.5vw, 96px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -.02em;
+  color: #fff;
+  text-transform: uppercase;
+  margin: 6px 0 18px;
+}
+.hero-name .amber { color: var(--amber); }
+.cursor {
+  display: inline-block;
+  width: .55em; height: .95em;
+  background: var(--amber);
+  vertical-align: baseline;
+  margin-left: 8px;
+  animation: blink 1.1s steps(1) infinite;
+}
+.term-line { color: var(--dim); }
+.term-line b { color: var(--green); font-weight: 400; }
+.term-out { margin: 4px 0 14px; max-width: 720px; }
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 22px;
+}
+.stat { background: var(--bg); padding: 12px 14px; }
+.stat b { display: block; color: var(--amber); font-size: 15px; font-weight: 600; }
+.stat span { font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); }
+
+/* ── ALARM TICKER ── */
+.alarm {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: rgba(255,176,0,.05);
+  margin-bottom: 22px;
+  padding: 8px 0;
+}
+.alarm-track {
+  display: flex;
+  width: max-content;
+  animation: tick 26s linear infinite;
+  white-space: nowrap;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* ── PROJECT SCREENS ── */
+.screen { margin-bottom: 26px; }
+.viewport {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.viewport img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7.5;
+  object-fit: cover;
+  filter: saturate(.55) brightness(.82) contrast(1.1) sepia(.18);
+  transition: filter .5s;
+}
+.viewport:hover img { filter: saturate(.8) brightness(.92) contrast(1.05) sepia(.08); }
+.viewport::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(7,10,13,.75), transparent 45%);
+  pointer-events: none;
+}
+.vp-corner {
+  position: absolute;
+  width: 14px; height: 14px;
+  border: 2px solid var(--amber);
+  z-index: 2;
+}
+.vp-corner.tl { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+.vp-corner.tr { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+.vp-corner.bl { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+.vp-corner.br { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+.data-pt {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #0d0f12;
+  background: rgba(255,255,255,.93);
+  padding: 3px 9px;
+  white-space: nowrap;
+  z-index: 3;
+}
+.data-pt::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.data-pt.b::before { background: var(--blue); }
+.screen-info { padding: 18px 2px 0; }
+.screen-info h3 {
+  color: #fff;
+  font-size: clamp(19px, 2.6vw, 28px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.screen-info .sub { color: var(--dim); font-size: 11.5px; letter-spacing: 1.5px; text-transform: uppercase; margin: 2px 0 12px; }
+.screen-info p { max-width: 760px; margin-bottom: 14px; color: var(--txt); }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chips span {
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  color: var(--dim);
+}
+.chips span:hover { border-color: var(--amber); color: var(--amber); }
+
+/* aux grid */
+.aux-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.aux {
+  border: 1px solid var(--line);
+  padding: 18px;
+  background: var(--bg);
+  transition: border-color .25s;
+}
+.aux:hover { border-color: var(--amber); }
+.aux b { color: #fff; font-weight: 600; font-size: 14.5px; text-transform: uppercase; letter-spacing: 1px; }
+.aux i { display: block; font-style: normal; color: var(--amber); margin-bottom: 8px; }
+
+/* ── LOG TABLE (experience) ── */
+.log-row {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 8px 24px;
+  padding: 18px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.log-row:last-child { border-bottom: 0; }
+.log-co { color: var(--amber); font-weight: 600; font-size: 17px; text-transform: uppercase; }
+.log-role { color: var(--green); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.log-row p { color: var(--txt); max-width: 720px; }
+
+/* ── POINTS DB (skills) ── */
+.spec-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: clamp(20px, 3.5vw, 44px);
+}
+.spec-label {
+  color: var(--amber);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 7px;
+  margin-bottom: 12px;
+}
+.spec-label.gap { margin-top: 26px; }
+.pt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 12.5px;
+}
+.gauge { color: var(--green); letter-spacing: 2px; font-size: 12px; }
+.gauge .off { color: var(--line); }
+.cert { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.cert b { display: block; color: #fff; font-weight: 600; font-size: 13.5px; }
+.cert span { font-size: 11.5px; color: var(--dim); }
+
+/* ── COMMS ── */
+.comms-big {
+  display: inline-block;
+  font-size: clamp(20px, 4.6vw, 52px);
+  font-weight: 700;
+  color: var(--amber);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  word-break: break-all;
+  border-bottom: 2px solid var(--amber);
+  padding-bottom: 6px;
+  transition: color .25s, border-color .25s;
+}
+.comms-big:hover { color: #fff; border-color: #fff; }
+.comms-meta { margin-top: 18px; color: var(--dim); }
+.comms-meta a { color: var(--txt); text-decoration: none; }
+.comms-meta a:hover { color: var(--amber); }
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 18px 2px 8px;
+  color: var(--dim);
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.footer a { color: var(--dim); text-decoration: none; }
+.footer a:hover { color: var(--amber); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 760px) {
+  .aux-grid, .spec-grid { grid-template-columns: 1fr; }
+  .log-row { grid-template-columns: 1fr; }
+  .viewport img { aspect-ratio: 16 / 10; }
+  .data-pt { font-size: 10px; }
+  .sys-clock { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sysbar">
+  <a class="sys-id" href="#top" style="text-decoration:none"><span class="sys-dot"></span>NS.BAS</a>
+  <div class="sys-tabs">
+    <a href="#top">Overview</a>
+    <a href="#projects">Projects</a>
+    <a href="#log">Log</a>
+    <a href="#specs">Specs</a>
+    <a href="#comms">Comms</a>
+  </div>
+  <span class="sys-clock" id="clock">--:--:--</span>
+</nav>
+
+<div class="wrap" id="top">
+
+  <!-- OVERVIEW -->
+  <section class="panel">
+    <div class="panel-head"><span>SYS / OPERATOR PROFILE</span><span class="status">ONLINE</span></div>
+    <div class="panel-body">
+      <p class="term-line"><b>&gt;</b> whoami --location "Northwest Arkansas"</p>
+      <h1 class="hero-name">Nathan<br>Stewart<span class="amber">_</span><span class="cursor"></span></h1>
+      <p class="term-line"><b>&gt;</b> cat role.txt</p>
+      <p class="term-out">CONTROLS ENGINEER &amp; PROJECTS MANAGER — versatile building automation
+      engineer with a proven track record across commercial, cultural, and industrial settings.
+      Leading critical projects and delivering hands-on engineering from scope and design
+      through commissioning and handoff.</p>
+      <div class="hero-stats">
+        <div class="stat"><b>BAS / DDC</b><span>Discipline</span></div>
+        <div class="stat"><b>Scope → Handoff</b><span>Delivery</span></div>
+        <div class="stat"><b>Cultural · Commercial</b><span>Sites</span></div>
+        <div class="stat"><b>NWA</b><span>Region</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="alarm" aria-hidden="true">
+    <div class="alarm-track">
+      <span>MODBUS + BACNET + LON + IP + HARDWARE + SOFTWARE + VFDS + INTEGRATION + PROGRAMMING + LOGIC + PROJECT MANAGEMENT + DESIGN + GRAPHICS + OPERATIONS +&nbsp;</span><span>MODBUS + BACNET + LON + IP + HARDWARE + SOFTWARE + VFDS + INTEGRATION + PROGRAMMING + LOGIC + PROJECT MANAGEMENT + DESIGN + GRAPHICS + OPERATIONS +&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <section class="panel" id="projects">
+    <div class="panel-head"><span>PRJ / ACTIVE SCREENS — SELECTED WORK</span><span class="status">2 RUNNING</span></div>
+    <div class="panel-body">
+
+      <article class="screen">
+        <a class="viewport" href="#comms" aria-label="Crystal Bridges Museum — get in touch">
+          <img src="../img/crystal-bridges.jpg" alt="Aerial view of Crystal Bridges Museum">
+          <span class="vp-corner tl"></span><span class="vp-corner tr"></span>
+          <span class="vp-corner bl"></span><span class="vp-corner br"></span>
+          <span class="data-pt" style="right:5%; top:12%">AHU-07 · 52.1°F SAT</span>
+          <span class="data-pt b" style="left:6%; bottom:16%">RH 50.2% · GALLERY 4</span>
+        </a>
+        <div class="screen-info">
+          <h3>Crystal Bridges Museum</h3>
+          <p class="sub">ES2 · Bentonville, AR · Cultural</p>
+          <p>Full BAS retrofit and reengineering of a world-class art museum — precision
+          environmental control where a fraction of a degree and humidity matters.</p>
+          <div class="chips">
+            <span>BAS Retrofit</span><span>Logic Programming</span><span>Graphics</span>
+            <span>Database</span><span>Project Management</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen">
+        <a class="viewport" href="#comms" aria-label="Frank Lloyd Wright House — get in touch">
+          <img src="../img/bachman-wilson.jpg" alt="Interior of the Bachman-Wilson House">
+          <span class="vp-corner tl"></span><span class="vp-corner tr"></span>
+          <span class="vp-corner bl"></span><span class="vp-corner br"></span>
+          <span class="data-pt" style="left:34%; top:14%">ROOM TEMP 70.9°F</span>
+        </a>
+        <div class="screen-info">
+          <h3>Frank Lloyd Wright House</h3>
+          <p class="sub">ES2 · Bentonville, AR · Historic</p>
+          <p>Recontrol of the historic Bachman-Wilson Usonian residence — modern building
+          automation woven invisibly into protected architecture. Engineering controls that
+          preserve a landmark while keeping its environment stable year-round.</p>
+          <div class="chips">
+            <span>BAS Retrofit</span><span>Logic Programming</span><span>Graphics</span>
+            <span>Database</span><span>Project Management</span><span>Historic Preservation</span>
+          </div>
+        </div>
+      </article>
+
+      <div class="aux-grid">
+        <div class="aux"><i>+</i><b>Commercial &amp; Institutional BMS</b></div>
+        <div class="aux"><i>+</i><b>Large-Scale Multi-Site Deployments</b></div>
+        <div class="aux"><i>+</i><b>Critical Space Design</b></div>
+        <div class="aux"><i>+</i><b>Strategic Logic Applications</b></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LOG -->
+  <section class="panel" id="log">
+    <div class="panel-head"><span>LOG / EXPERIENCE HISTORY</span><span class="status">3 ENTRIES</span></div>
+    <div class="panel-body">
+      <div class="log-row">
+        <span class="log-co">ES2</span>
+        <div>
+          <span class="log-role">Controls Engineer &amp; Projects Manager</span>
+          <p>Hybrid role combining engineering with full project management responsibility.
+          Leading critical retrofit and recontrol initiatives from scope and design through
+          commissioning and handoff on high-profile cultural and commercial sites.</p>
+        </div>
+      </div>
+      <div class="log-row">
+        <span class="log-co">MCC</span>
+        <div>
+          <span class="log-role">Controls Lead</span>
+          <p>Led BMS projects from installation through system delivery. Designed programs,
+          graphics, and schematics for complex third-party integrations. Primary point of
+          contact for commissioning and client handoff.</p>
+        </div>
+      </div>
+      <div class="log-row">
+        <span class="log-co">HB Controls</span>
+        <div>
+          <span class="log-role">Controls Lead</span>
+          <p>Oversaw regional large-scale commercial BMS projects. Improved QA processes and
+          internal communication pipelines to streamline multi-site deployments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section class="panel" id="specs">
+    <div class="panel-head"><span>SPC / POINTS DATABASE — CAPABILITIES</span><span class="status">NOMINAL</span></div>
+    <div class="panel-body">
+      <div class="spec-grid">
+        <div>
+          <p class="spec-label">Skills</p>
+          <div class="pt-row"><span>Logic / Programming</span><span class="gauge">█████</span></div>
+          <div class="pt-row"><span>Integration</span><span class="gauge">█████</span></div>
+          <div class="pt-row"><span>Project Management</span><span class="gauge">████<span class="off">█</span></span></div>
+          <div class="pt-row"><span>Graphics &amp; UI Design</span><span class="gauge">████<span class="off">█</span></span></div>
+          <div class="pt-row"><span>Networking / Security</span><span class="gauge">████<span class="off">█</span></span></div>
+          <div class="pt-row"><span>IoT / Hardware</span><span class="gauge">███<span class="off">██</span></span></div>
+        </div>
+        <div>
+          <p class="spec-label">Certifications</p>
+          <div class="cert"><b>Niagara 4 (TCP)</b><span>Tridium University · Jul 2024</span></div>
+          <div class="cert"><b>CompTIA Network+</b><span>CompTIA · Sep 2022</span></div>
+          <div class="cert"><b>CompTIA Security+</b><span>CompTIA · Sep 2022</span></div>
+        </div>
+        <div>
+          <p class="spec-label">Education</p>
+          <div class="cert"><b>Navarro College / UNT</b><span>2006 – 2008</span></div>
+          <p class="spec-label gap">Off the Clock</p>
+          <div class="chips"><span>Duck Farming</span><span>IoT</span><span>Hiking</span><span>Gaming</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMS -->
+  <section class="panel" id="comms">
+    <div class="panel-head"><span>COM / CONTACT CHANNEL</span><span class="status">OPEN</span></div>
+    <div class="panel-body">
+      <p class="term-line" style="margin-bottom:14px"><b>&gt;</b> Have a building that needs a brain? Open a channel:</p>
+      <a class="comms-big" href="mailto:nhstewart@proton.me">nhstewart@proton.me</a>
+      <p class="comms-meta">ALT CHANNEL → <a href="https://github.com/iridiumegg" target="_blank" rel="noopener">github.com/iridiumegg</a></p>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span>NS.BAS · CONTROLS ENGINEERING · <span id="year">2026</span></span>
+    <a href="#top">RETURN TO TOP ↑</a>
+  </div>
+
+</div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+var clock = document.getElementById('clock');
+function tick() {
+  var d = new Date();
+  function p(n) { return String(n).padStart(2, '0'); }
+  clock.textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
