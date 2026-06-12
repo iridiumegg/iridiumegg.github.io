@@ -1,5 +1,5 @@
 /* ───────────────────────────────────────────
-   Nathan Stewart — portfolio · 3D edition
+   Nathan — portfolio · 3D edition
    ─────────────────────────────────────────── */
 :root {
   --bg: #0d0f12;
@@ -375,18 +375,63 @@ main, .nav, .marquee { position: relative; z-index: 2; }
 .project-flip .project-visual { order: 2; }
 .project-flip .project-info { order: 1; }
 
+@property --frame-ang {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
 .project-visual {
   display: block;
   position: relative;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   aspect-ratio: 16 / 9;
   text-decoration: none;
   background: var(--surface);
   transform-style: preserve-3d;
   will-change: transform;
+  box-shadow: 0 0 36px rgba(0, 200, 160, .1);
 }
+/* animated tracing gradient frame */
+.project-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  padding: 2px;
+  background: conic-gradient(from var(--frame-ang),
+    rgba(0,200,160,.95), rgba(0,120,255,.35) 25%, rgba(30,35,41,.9) 45%,
+    rgba(0,200,160,.4) 65%, rgba(30,35,41,.9) 85%, rgba(0,200,160,.95));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+  animation: frameSpin 7s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+@keyframes frameSpin { to { --frame-ang: 360deg; } }
+/* viewfinder corner brackets */
+.project-visual::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  z-index: 5;
+  background:
+    linear-gradient(var(--accent), var(--accent)) left 0 top 0 / 20px 2px,
+    linear-gradient(var(--accent), var(--accent)) left 0 top 0 / 2px 20px,
+    linear-gradient(var(--accent), var(--accent)) right 0 top 0 / 20px 2px,
+    linear-gradient(var(--accent), var(--accent)) right 0 top 0 / 2px 20px,
+    linear-gradient(var(--accent), var(--accent)) left 0 bottom 0 / 20px 2px,
+    linear-gradient(var(--accent), var(--accent)) left 0 bottom 0 / 2px 20px,
+    linear-gradient(var(--accent), var(--accent)) right 0 bottom 0 / 20px 2px,
+    linear-gradient(var(--accent), var(--accent)) right 0 bottom 0 / 2px 20px;
+  background-repeat: no-repeat;
+  opacity: .85;
+  transition: inset .35s var(--ease), opacity .35s;
+}
+.project-visual:hover::after { inset: 6px; opacity: 1; }
 .visual-photo {
   position: absolute;
   inset: -8% 0;
@@ -722,6 +767,7 @@ main, .nav, .marquee { position: relative; z-index: 2; }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
   .pulse-dot { animation: none; }
+  .project-visual::before { animation: none; }
   .hero-scroll-line::after { animation: none; }
   html { scroll-behavior: auto; }
   .cursor-dot, .cursor-ring { display: none; }

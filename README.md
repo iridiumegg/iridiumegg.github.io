@@ -1,6 +1,6 @@
 # iridiumegg.github.io
 
-Personal portfolio / resume site for **Nathan Stewart** — Controls Engineer & Projects Manager.
+Personal portfolio / resume site for **Nathan** — Controls Engineer & Projects Manager.
 
 Live at **https://iridiumegg.github.io**
 
