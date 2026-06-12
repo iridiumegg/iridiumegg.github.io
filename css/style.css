@@ -238,27 +238,6 @@ main, .nav, .marquee { position: relative; z-index: 2; }
   0%, 100% { box-shadow: 0 0 0 0 rgba(0,200,160,.5); }
   50% { box-shadow: 0 0 0 9px rgba(0,200,160,0); }
 }
-.hero-name {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(40px, 14.5vw, 190px);
-  line-height: .92;
-  letter-spacing: -.04em;
-  text-transform: uppercase;
-  margin-bottom: 4vh;
-}
-.hero-name .line {
-  background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.hero-name .line-outline {
-  background: none;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 2px rgba(232, 234, 237, .85);
-  color: transparent;
-}
 .hero-bottom {
   display: flex;
   justify-content: space-between;

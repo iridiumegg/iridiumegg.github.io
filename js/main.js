@@ -226,18 +226,15 @@
   function heroIntro() {
     if (!hasGsap) return;
     var tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-    tl.fromTo('.hero-name .line',
-        { yPercent: 115 },
-        { yPercent: 0, duration: 1.25, stagger: 0.14 }, 0)
-      .fromTo('.hero-meta-row > *',
+    tl.fromTo('.hero-meta-row > *',
         { y: 24, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, stagger: 0.1 }, 0.35)
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.1 }, 0.1)
       .fromTo('.hero-bottom > *',
         { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.55)
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.12 }, 0.3)
       .fromTo('.nav',
         { y: -30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8 }, 0.5);
+        { y: 0, opacity: 1, duration: 0.8 }, 0.25);
   }
 
   function dismissLoader() {
@@ -255,7 +252,6 @@
     loader.style.display = 'none';
   } else {
     var counter = { v: 0 };
-    gsap.set('.hero-name .line', { yPercent: 115 });
     gsap.set(['.hero-meta-row > *', '.hero-bottom > *'], { opacity: 0 });
     gsap.to(counter, {
       v: 100, duration: 1.35, ease: 'power2.inOut',
