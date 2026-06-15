@@ -383,6 +383,331 @@
   });
 
   /* ════════════════════════════════════════
+     TALENT DNA — CliftonStrengths 34 helix
+     ════════════════════════════════════════ */
+  function initStrengths() {
+    var canvas = document.getElementById('dnaHelix');
+    var metersEl = document.getElementById('dnaMeters');
+    var readoutEl = document.getElementById('dnaReadout');
+    if (!canvas || !metersEl || !readoutEl) return;
+
+    var DOMAINS = {
+      EX: { name: 'Executing',             color: '#00c8a0', blurb: 'Makes things happen' },
+      ST: { name: 'Strategic Thinking',    color: '#0078ff', blurb: 'Sharpens the decision' },
+      IN: { name: 'Influencing',           color: '#f5a623', blurb: 'Rallies others' },
+      RB: { name: 'Relationship Building',  color: '#9b6dff', blurb: 'Holds the team together' }
+    };
+
+    // rank order = array order (index 0 = #1 strongest)
+    var THEMES = [
+      { n: 'Strategic',        d: 'ST', b: 'Spots patterns and obstacles others miss, maps several routes forward, then commits to the most effective one.' },
+      { n: 'Achiever',         d: 'EX', b: 'Relentless drive and stamina — needs measurable progress every day and takes deep satisfaction in finishing.' },
+      { n: 'Arranger',         d: 'EX', b: 'Aligns people, schedules, and resources on the fly; thrives juggling many moving parts toward the best result.' },
+      { n: 'Ideation',         d: 'ST', b: 'Fascinated by ideas and the connections between them — a creative engine that reframes problems from new angles.' },
+      { n: 'Belief',           d: 'EX', b: 'Anchored by unchanging core values; brings honesty, conviction, and a strong sense of purpose to the work.' },
+      { n: 'Responsibility',   d: 'EX', b: 'Takes psychological ownership of every commitment — dependable, and a person of his word.' },
+      { n: 'Analytical',       d: 'ST', b: 'Searches for causes and evidence, pressure-testing ideas until the logic holds up and reality is clear.' },
+      { n: 'Developer',        d: 'RB', b: 'Sees raw potential in people and invests in it, noticing and encouraging every small sign of progress.' },
+      { n: 'Learner',          d: 'ST', b: 'Driven by the process of learning itself — quick to absorb new technology and stay on the cutting edge.' },
+      { n: 'Futuristic',       d: 'ST', b: 'Vividly imagines what could be and uses that vision to energize and pull others toward a better tomorrow.' },
+      { n: 'Focus',            d: 'EX', b: 'Sets a direction and follows through, correcting course as needed to stay on track.' },
+      { n: 'Significance',     d: 'IN', b: 'Wants the work to matter and make a visible, lasting impact.' },
+      { n: 'Woo',              d: 'IN', b: 'Enjoys meeting new people and winning them over.' },
+      { n: 'Positivity',       d: 'RB', b: 'Brings contagious energy and optimism that lifts a team.' },
+      { n: 'Discipline',       d: 'EX', b: 'Creates order and predictability through routine and structure.' },
+      { n: 'Communication',    d: 'IN', b: 'Turns thoughts into clear words — a natural explainer and presenter.' },
+      { n: 'Maximizer',        d: 'IN', b: 'Pushes good toward great; never settles for "good enough".' },
+      { n: 'Consistency',      d: 'EX', b: 'Treats people fairly with clear, repeatable rules everyone can follow.' },
+      { n: 'Relator',          d: 'RB', b: 'Does his best work alongside people he knows and trusts.' },
+      { n: 'Includer',         d: 'RB', b: 'Notices who is left out and makes the effort to bring them in.' },
+      { n: 'Restorative',      d: 'EX', b: 'Drawn to broken things — figures out what is wrong and resolves it.' },
+      { n: 'Self-Assurance',   d: 'IN', b: 'Trusts his own judgment and inner compass under pressure.' },
+      { n: 'Empathy',          d: 'RB', b: 'Senses what others are feeling, often before they say it.' },
+      { n: 'Individualization', d: 'RB', b: 'Reads each person’s unique qualities and fits them together productively.' },
+      { n: 'Input',            d: 'ST', b: 'Collects information, tools, and resources worth keeping for later.' },
+      { n: 'Command',          d: 'IN', b: 'Takes control and makes the call when a situation needs one.' },
+      { n: 'Intellection',     d: 'ST', b: 'Enjoys deep, introspective thinking and intellectual discussion.' },
+      { n: 'Competition',      d: 'IN', b: 'Measures progress against others and plays to win.' },
+      { n: 'Context',          d: 'ST', b: 'Understands the present by studying how it came to be.' },
+      { n: 'Harmony',          d: 'RB', b: 'Looks for consensus and practical common ground over friction.' },
+      { n: 'Deliberative',     d: 'EX', b: 'Weighs risk carefully and moves forward with serious care.' },
+      { n: 'Connectedness',    d: 'RB', b: 'Sees the links between things — few events are coincidences.' },
+      { n: 'Activator',        d: 'IN', b: 'Turns talk into action and wants to start now, not later.' },
+      { n: 'Adaptability',     d: 'RB', b: 'Goes with the flow and takes things as they come, one day at a time.' }
+    ];
+    var N = THEMES.length;
+
+    /* — domain meters (weighted by rank, doubling as the legend) — */
+    var scores = { EX: 0, ST: 0, IN: 0, RB: 0 };
+    var counts = { EX: 0, ST: 0, IN: 0, RB: 0 };
+    var totalW = 0;
+    THEMES.forEach(function (t, i) {
+      var w = N - i;            // #1 weighs 34 … #34 weighs 1
+      scores[t.d] += w;
+      counts[t.d] += 1;
+      totalW += w;
+    });
+    var order = Object.keys(DOMAINS).sort(function (a, b) { return scores[b] - scores[a]; });
+
+    order.forEach(function (k) {
+      var dom = DOMAINS[k];
+      var pct = Math.round(scores[k] / totalW * 100);
+      var row = document.createElement('div');
+      row.className = 'dna-meter';
+      row.setAttribute('data-domain', k);
+      row.innerHTML =
+        '<div class="dna-meter-top">' +
+          '<span class="dna-meter-name"><i style="background:' + dom.color + '"></i>' + dom.name + '</span>' +
+          '<span class="dna-meter-pct">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="dna-meter-track"><span class="dna-meter-fill" data-pct="' + pct + '" style="background:' + dom.color + '"></span></div>' +
+        '<p class="dna-meter-desc">' + dom.blurb + ' · ' + counts[k] + ' themes</p>';
+      metersEl.appendChild(row);
+    });
+    var meterFills = metersEl.querySelectorAll('.dna-meter-fill');
+
+    function fillMeters(animate) {
+      meterFills.forEach(function (f) {
+        var pct = f.getAttribute('data-pct') + '%';
+        if (animate && hasGsap) gsap.fromTo(f, { width: '0%' }, { width: pct, duration: 1.1, ease: 'power3.out' });
+        else f.style.width = pct;
+      });
+    }
+    if (!reducedMotion && hasGsap && hasST) {
+      ScrollTrigger.create({ trigger: metersEl, start: 'top 85%', once: true, onEnter: function () { fillMeters(true); } });
+    } else {
+      fillMeters(false);
+    }
+
+    /* — domain → strand highlight on meter hover — */
+    var activeDomain = null;
+    metersEl.querySelectorAll('.dna-meter').forEach(function (row) {
+      var k = row.getAttribute('data-domain');
+      row.addEventListener('mouseenter', function () {
+        activeDomain = k;
+        metersEl.classList.add('dimmed');
+        row.classList.add('active');
+        if (!running) draw(lastT);
+      });
+      row.addEventListener('mouseleave', function () {
+        activeDomain = null;
+        metersEl.classList.remove('dimmed');
+        row.classList.remove('active');
+        if (!running) draw(lastT);
+      });
+    });
+
+    /* — readout card — */
+    var current = -1;
+    function renderReadout(i) {
+      if (i === current) return;
+      current = i;
+      var t = THEMES[i], dom = DOMAINS[t.d];
+      readoutEl.innerHTML =
+        '<div class="dna-rank" style="color:' + dom.color + '"><span class="dna-rk-hash">#</span>' + (i + 1) + '</div>' +
+        '<div class="dna-rd-body">' +
+          '<div class="dna-rd-head">' +
+            '<span class="dna-rd-name">' + t.n + '</span>' +
+            '<span class="dna-pill" style="color:' + dom.color + ';border-color:' + dom.color + '">' + dom.name + '</span>' +
+          '</div>' +
+          '<p class="dna-rd-desc">' + t.b + '</p>' +
+        '</div>';
+      if (hasGsap && !reducedMotion) gsap.fromTo(readoutEl.querySelector('.dna-rd-body'), { opacity: .25, x: 8 }, { opacity: 1, x: 0, duration: .35, ease: 'power2.out' });
+    }
+
+    /* — canvas double helix — */
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+    var nodes = [];          // front (interactive) node screen positions
+    var selIndex = 0;        // locked selection
+    var hoverIndex = null;
+    var lastT = 0;
+    var running = false;
+
+    function resize() {
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!running) draw(lastT);
+    }
+
+    function hexA(hex, a) {
+      var n = parseInt(hex.slice(1), 16);
+      return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
+    }
+
+    function draw(time) {
+      lastT = time;
+      ctx.clearRect(0, 0, W, H);
+      var top = 54, bot = H - 40;
+      var cx = W * 0.5;
+      var amp = Math.min(W * 0.30, 145);
+      var turns = 2.35;
+      nodes.length = 0;
+
+      var pts = [];
+      for (var i = 0; i < N; i++) {
+        var tt = i / (N - 1);
+        var y = top + tt * (bot - top);
+        var ang = tt * turns * Math.PI * 2 + time;
+        var fz = Math.sin(ang);                 // front depth -1..1
+        var fx = cx + amp * Math.cos(ang);
+        var bx = cx - amp * Math.cos(ang);
+        var bz = -fz;
+        pts.push({ i: i, y: y, fx: fx, bx: bx, fz: fz, bz: bz, d: THEMES[i].d });
+      }
+
+      // backbones (continuous strands)
+      function strand(key, zkey, base) {
+        ctx.beginPath();
+        for (var j = 0; j < pts.length; j++) {
+          var p = pts[j];
+          if (j === 0) ctx.moveTo(p[key], p.y); else ctx.lineTo(p[key], p.y);
+        }
+        ctx.strokeStyle = base;
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+      }
+      strand('bx', 'bz', 'rgba(120,140,160,.16)');
+      strand('fx', 'fz', 'rgba(150,170,190,.28)');
+
+      // rungs + back nodes
+      for (var r = 0; r < pts.length; r++) {
+        var p2 = pts[r];
+        var col = DOMAINS[p2.d].color;
+        var dim = activeDomain && activeDomain !== p2.d;
+        var depth = (p2.fz + 1) / 2;            // 0..1
+        var ra = (0.10 + 0.18 * depth) * (dim ? 0.22 : 1);
+        ctx.beginPath();
+        ctx.moveTo(p2.fx, p2.y);
+        ctx.lineTo(p2.bx, p2.y);
+        ctx.strokeStyle = hexA(col, ra);
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        // back node (small, dim)
+        var bdepth = (p2.bz + 1) / 2;
+        ctx.beginPath();
+        ctx.arc(p2.bx, p2.y, 1.6 + 1.2 * bdepth, 0, Math.PI * 2);
+        ctx.fillStyle = hexA(col, (0.25 + 0.3 * bdepth) * (dim ? 0.2 : 1));
+        ctx.fill();
+      }
+
+      // front nodes (the data points) — draw last so they sit on top
+      for (var f = 0; f < pts.length; f++) {
+        var p3 = pts[f];
+        var dom = DOMAINS[p3.d];
+        var top10 = p3.i < 10;
+        var dpt = (p3.fz + 1) / 2;
+        var dimmed = activeDomain && activeDomain !== p3.d;
+        var rad = (top10 ? 5.4 : 3.2) * (0.72 + 0.28 * dpt);
+        var isCur = (hoverIndex === p3.i) || (hoverIndex === null && selIndex === p3.i);
+        var alpha = (0.4 + 0.6 * dpt) * (dimmed ? 0.18 : 1);
+
+        nodes.push({ i: p3.i, x: p3.fx, y: p3.y, r: rad });
+
+        if (top10 && !dimmed) { ctx.shadowColor = dom.color; ctx.shadowBlur = 12 * dpt + 4; }
+        else { ctx.shadowBlur = 0; }
+
+        ctx.beginPath();
+        ctx.arc(p3.fx, p3.y, isCur ? rad + 2.4 : rad, 0, Math.PI * 2);
+        ctx.fillStyle = hexA(dom.color, isCur ? 1 : alpha);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if (isCur) {
+          ctx.beginPath();
+          ctx.arc(p3.fx, p3.y, rad + 7, 0, Math.PI * 2);
+          ctx.strokeStyle = hexA(dom.color, 0.9);
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    var clock = (typeof THREE !== 'undefined') ? new THREE.Clock() : null;
+    var t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    function loop() {
+      if (!running) return;
+      var time = clock ? clock.getElapsedTime() : ((performance.now() - t0) / 1000);
+      draw(time * 0.32);
+      requestAnimationFrame(loop);
+    }
+    function start() {
+      if (running || reducedMotion) return;
+      running = true;
+      if (clock) clock.start();
+      requestAnimationFrame(loop);
+    }
+    function stop() { running = false; }
+
+    /* — pointer interaction — */
+    var hint = document.getElementById('dnaHint');
+    function pick(clientX, clientY) {
+      var rect = canvas.getBoundingClientRect();
+      var x = clientX - rect.left, y = clientY - rect.top;
+      var best = null, bestD = 1e9;
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        var dx = n.x - x, dy = n.y - y, dd = dx * dx + dy * dy;
+        var hit = Math.max(n.r + 7, 13);
+        if (dd < hit * hit && dd < bestD) { bestD = dd; best = n.i; }
+      }
+      return best;
+    }
+    if (!isCoarse) {
+      canvas.addEventListener('mousemove', function (e) {
+        var hit = pick(e.clientX, e.clientY);
+        hoverIndex = hit;
+        canvas.style.cursor = hit !== null ? 'pointer' : 'default';
+        if (hit !== null) { renderReadout(hit); if (hint) hint.classList.add('gone'); }
+        else renderReadout(selIndex);
+        if (!running) draw(lastT);
+      });
+      canvas.addEventListener('mouseleave', function () {
+        hoverIndex = null;
+        renderReadout(selIndex);
+        if (!running) draw(lastT);
+      });
+      canvas.addEventListener('click', function (e) {
+        var hit = pick(e.clientX, e.clientY);
+        if (hit !== null) { selIndex = hit; renderReadout(hit); }
+      });
+    } else {
+      canvas.addEventListener('touchstart', function (e) {
+        var tch = e.touches[0];
+        if (!tch) return;
+        var hit = pick(tch.clientX, tch.clientY);
+        if (hit !== null) {
+          selIndex = hit; hoverIndex = null; renderReadout(hit);
+          if (hint) hint.classList.add('gone');
+          if (!running) draw(lastT);
+        }
+      }, { passive: true });
+    }
+
+    window.addEventListener('resize', resize);
+
+    // run only while the section is on screen
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { en.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.08 }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState !== 'visible') stop();
+      else start();
+    });
+
+    // boot
+    resize();
+    renderReadout(0);
+    if (reducedMotion) draw(0.6); else start();
+  }
+
+  /* ════════════════════════════════════════
      NAV STATE
      ════════════════════════════════════════ */
   var nav = document.getElementById('nav');
@@ -392,7 +717,7 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  var sections = ['work', 'experience', 'capabilities', 'contact']
+  var sections = ['work', 'experience', 'capabilities', 'dna', 'contact']
     .map(function (id) { return document.getElementById(id); })
     .filter(Boolean);
   var navLinks = document.querySelectorAll('[data-nav]');
@@ -412,6 +737,7 @@
      BOOT
      ════════════════════════════════════════ */
   initScene();
+  initStrengths();
 
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();

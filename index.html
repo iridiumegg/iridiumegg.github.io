@@ -48,6 +48,7 @@
     <a href="#work" data-nav>Work</a>
     <a href="#experience" data-nav>Experience</a>
     <a href="#capabilities" data-nav>Capabilities</a>
+    <a href="#dna" data-nav>DNA</a>
     <a href="#contact" data-nav class="nav-cta" data-magnetic>Contact</a>
   </div>
 </nav>
@@ -266,10 +267,58 @@
     </div>
   </section>
 
+  <!-- TALENT DNA -->
+  <section class="section" id="dna">
+    <div class="section-head" data-reveal>
+      <span class="section-index">04</span>
+      <h2 class="section-title" data-shift>Talent DNA</h2>
+    </div>
+
+    <p class="dna-intro" data-reveal>
+      A data read on how I actually work — distilled from the Gallup
+      CliftonStrengths<span class="dna-reg">®</span> 34 assessment down to the
+      patterns that show up on a project.
+      <span class="dna-lede">I lead with Executing and Strategic Thinking</span> —
+      the mix that both shapes the plan and ships it.
+    </p>
+
+    <div class="dna-grid">
+      <!-- LEFT: domain lean -->
+      <div class="dna-side" data-reveal>
+        <h3 class="cap-label">Domain Lean</h3>
+        <div class="dna-meters" id="dnaMeters"><!-- built by JS --></div>
+        <p class="dna-note">
+          Weighted across all 34 themes by rank, then normalized.
+          Hover a domain to trace it through the strand.
+        </p>
+      </div>
+
+      <!-- RIGHT: interactive helix + readout -->
+      <div class="dna-main" data-reveal>
+        <div class="dna-helix-wrap">
+          <canvas id="dnaHelix" class="dna-helix" role="img"
+            aria-label="Interactive double helix of 34 CliftonStrengths themes, ranked strongest to weakest and color-coded by domain"></canvas>
+          <span class="dna-hint" id="dnaHint">Hover the strand →</span>
+          <span class="dna-axis dna-axis-top">01 · Strongest</span>
+          <span class="dna-axis dna-axis-bot">34 · Weakest</span>
+        </div>
+        <div class="dna-readout" id="dnaReadout"><!-- built by JS --></div>
+      </div>
+    </div>
+
+    <noscript>
+      <p class="dna-intro">
+        Top 10 signature themes: Strategic, Achiever, Arranger, Ideation, Belief,
+        Responsibility, Analytical, Developer, Learner, Futuristic. Leading domains:
+        Executing and Strategic Thinking.
+      </p>
+    </noscript>
+  </section>
+
   <!-- CONTACT -->
   <footer class="contact" id="contact">
     <div class="section-head" data-reveal>
-      <span class="section-index">04</span>
+      <span class="section-index">05</span>
       <h2 class="section-title" data-shift>Contact</h2>
     </div>
     <p class="contact-kicker" data-reveal>Have a building that needs a brain?</p>
