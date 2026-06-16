@@ -33,7 +33,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; overflow-x: clip; scrollbar-gutter: stable; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 
 body {
   background: var(--bg);
@@ -301,8 +301,7 @@ a { color: inherit; }
   background: rgba(19, 22, 27, .66);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  height: 148px;
-  overflow: hidden;
+  min-height: 132px;
 }
 .dna-rank {
   font-family: 'Syne', sans-serif;
@@ -346,10 +345,6 @@ a { color: inherit; }
   color: var(--dim);
   font-size: 13px;
   line-height: 1.8;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* ── FOOTER ── */
@@ -394,6 +389,9 @@ a { color: inherit; }
 
 <nav class="nav" id="nav">
   <a href="https://iridiumegg.github.io" class="nav-logo">NS<span class="nav-logo-dot">.</span></a>
+  <a href="https://iridiumegg.github.io/#dna" class="nav-back">
+    <span class="nav-back-arrow">←</span> Back to portfolio
+  </a>
 </nav>
 
 <main class="page">
@@ -443,6 +441,7 @@ a { color: inherit; }
 
   <footer class="page-footer">
     <span>NS · Talent DNA · <span id="year">2026</span></span>
+    <a href="https://iridiumegg.github.io" class="footer-link">iridiumegg.github.io ↗</a>
   </footer>
 
 </main>
@@ -739,27 +738,21 @@ a { color: inherit; }
     }
 
     if (!isCoarse) {
-      var lastHover = null;
       canvas.addEventListener('mousemove', function (e) {
         var hit = pick(e.clientX, e.clientY);
         hoverIndex = hit;
         canvas.style.cursor = hit !== null ? 'pointer' : 'default';
-        if (hit !== null) {
-          lastHover = hit;
-          renderReadout(hit);
-          if (hint) hint.classList.add('gone');
-        }
+        if (hit !== null) { renderReadout(hit); if (hint) hint.classList.add('gone'); }
+        else renderReadout(selIndex);
         if (!running) draw(lastT);
       });
       canvas.addEventListener('mouseleave', function () {
         hoverIndex = null;
-        lastHover = null;
         renderReadout(selIndex);
         if (!running) draw(lastT);
       });
       canvas.addEventListener('click', function (e) {
         var hit = pick(e.clientX, e.clientY);
-        if (hit === null) hit = lastHover;
         if (hit !== null) { selIndex = hit; renderReadout(hit); }
       });
     } else {
