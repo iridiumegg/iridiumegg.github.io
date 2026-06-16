@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talent DNA — Nathan Stewart</title>
+<meta name="description" content="An interactive CliftonStrengths visualization — 34 themes ranked, color-coded by domain, and rendered as a rotating double helix.">
+<meta property="og:title" content="Talent DNA — Nathan Stewart">
+<meta property="og:description" content="CliftonStrengths assessment visualized as an interactive double helix. Explore 34 themes across Executing, Strategic Thinking, Influencing, and Relationship Building.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://iridiumegg.github.io/strengths">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Talent DNA — Nathan Stewart">
+<meta name="twitter:description" content="CliftonStrengths assessment visualized as an interactive double helix.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d0f12'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='bold' fill='%2300c8a0' text-anchor='middle'%3ENS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── BASE ── */
+:root {
+  --bg: #0d0f12;
+  --surface: #13161b;
+  --border: #1e2329;
+  --accent: #00c8a0;
+  --accent2: #0078ff;
+  --text: #e8eaed;
+  --muted: #6b7280;
+  --dim: #9ca3af;
+  --pad: clamp(20px, 5vw, 72px);
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; overflow-x: clip; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100svh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.4;
+}
+
+a { color: inherit; }
+::selection { background: var(--accent); color: var(--bg); }
+
+/* ── NAV ── */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px var(--pad);
+  transition: background .4s, padding .4s, border-color .4s;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(13, 15, 18, .88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -1px;
+  text-decoration: none;
+  color: #fff;
+}
+.nav-logo-dot { color: var(--accent); }
+.nav-back {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--dim);
+  transition: color .25s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-back:hover { color: var(--accent); }
+.nav-back-arrow {
+  display: inline-block;
+  transition: transform .3s var(--ease);
+}
+.nav-back:hover .nav-back-arrow { transform: translateX(-4px); }
+
+/* ── PAGE LAYOUT ── */
+.page {
+  padding: 120px var(--pad) clamp(60px, 10vh, 120px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  margin-bottom: clamp(40px, 7vh, 72px);
+  padding-bottom: clamp(24px, 4vh, 40px);
+  border-bottom: 1px solid var(--border);
+}
+.page-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(36px, 7vw, 80px);
+  line-height: .92;
+  letter-spacing: -.03em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.page-title span {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2px rgba(232, 234, 237, .6);
+  color: transparent;
+}
+.page-desc {
+  max-width: 640px;
+  color: var(--dim);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* ── SECTION HEAD ── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 18px;
+  margin-bottom: clamp(36px, 6vh, 64px);
+}
+.section-index {
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(30px, 5.5vw, 64px);
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+
+/* ── CAP LABEL ── */
+.cap-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cap-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── TALENT DNA ── */
+.dna-intro {
+  max-width: 760px;
+  color: var(--dim);
+  font-size: 14px;
+  line-height: 1.9;
+  margin-bottom: clamp(34px, 6vh, 60px);
+}
+.dna-grid {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+.dna-meter { margin-bottom: 20px; cursor: default; transition: opacity .3s; }
+.dna-meter:last-child { margin-bottom: 0; }
+.dna-meter-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.dna-meter-name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: .2px;
+}
+.dna-meter-name i {
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  flex: none;
+}
+.dna-meter-pct {
+  font-size: 13px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.dna-meter-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dna-meter-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  transition: filter .3s;
+}
+.dna-meter-desc {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 7px;
+  letter-spacing: .2px;
+}
+.dna-meters.dimmed .dna-meter:not(.active) { opacity: .4; }
+.dna-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.dna-helix-wrap {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0,200,160,.06), transparent 60%),
+    rgba(19, 22, 27, .5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 200, 160, .06);
+}
+.dna-helix {
+  display: block;
+  width: 100%;
+  height: clamp(390px, 54vh, 560px);
+  touch-action: pan-y;
+}
+.dna-hint, .dna-axis {
+  position: absolute;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  pointer-events: none;
+}
+.dna-hint { top: 14px; right: 16px; transition: opacity .4s; }
+.dna-hint.gone { opacity: 0; }
+.dna-axis-top { top: 14px; left: 16px; color: var(--dim); }
+.dna-axis-bot { bottom: 14px; left: 16px; }
+.dna-readout {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(16px, 2.4vw, 26px);
+  margin-top: 18px;
+  padding: 22px clamp(20px, 2.6vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(19, 22, 27, .66);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  min-height: 132px;
+}
+.dna-rank {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(40px, 6vw, 62px);
+  line-height: .82;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+.dna-rk-hash {
+  font-size: .42em;
+  vertical-align: top;
+  opacity: .7;
+  margin-right: 1px;
+}
+.dna-rd-body { flex: 1; min-width: 0; }
+.dna-rd-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.dna-rd-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(21px, 2.7vw, 30px);
+  letter-spacing: -.01em;
+  line-height: 1;
+}
+.dna-pill {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 2px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.dna-rd-desc {
+  color: var(--dim);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* ── FOOTER ── */
+.page-footer {
+  margin-top: clamp(56px, 10vh, 100px);
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.footer-link {
+  text-decoration: none;
+  color: var(--muted);
+  transition: color .25s;
+}
+.footer-link:hover { color: var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .dna-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .nav { padding: 14px 20px; }
+  .nav.scrolled { padding-top: 10px; padding-bottom: 10px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .dna-hint { display: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="https://iridiumegg.github.io" class="nav-logo">NS<span class="nav-logo-dot">.</span></a>
+  <a href="https://iridiumegg.github.io/#dna" class="nav-back">
+    <span class="nav-back-arrow">←</span> Back to portfolio
+  </a>
+</nav>
+
+<main class="page">
+
+  <header class="page-header">
+    <p class="page-eyebrow">Gallup · CliftonStrengths 34</p>
+    <h1 class="page-title">Talent <span>DNA</span></h1>
+    <p class="page-desc">
+      A data read on how I actually work — distilled from the Gallup CliftonStrengths
+      assessment down to the patterns that show up on a project. All 34 themes ranked
+      strongest to weakest, color-coded by domain, and mapped through the strand below.
+      Hover or tap any node to explore.
+    </p>
+  </header>
+
+  <div class="dna-grid">
+    <!-- LEFT: domain lean -->
+    <div class="dna-side">
+      <h3 class="cap-label">Domain Lean</h3>
+      <div class="dna-meters" id="dnaMeters"></div>
+      <p class="dna-note">
+        Weighted across all 34 themes by rank, then normalized.
+        Hover a domain to trace it through the strand.
+      </p>
+    </div>
+
+    <!-- RIGHT: interactive helix + readout -->
+    <div class="dna-main">
+      <div class="dna-helix-wrap">
+        <canvas id="dnaHelix" class="dna-helix" role="img"
+          aria-label="Interactive double helix of 34 CliftonStrengths themes, ranked strongest to weakest and color-coded by domain"></canvas>
+        <span class="dna-hint" id="dnaHint">Hover the strand →</span>
+        <span class="dna-axis dna-axis-top">01 · Strongest</span>
+        <span class="dna-axis dna-axis-bot">34 · Weakest</span>
+      </div>
+      <div class="dna-readout" id="dnaReadout"></div>
+    </div>
+  </div>
+
+  <noscript>
+    <p class="dna-intro" style="margin-top:2rem">
+      Top 10 signature themes: Strategic, Achiever, Arranger, Ideation, Belief,
+      Responsibility, Analytical, Developer, Learner, Futuristic. Leading domains:
+      Executing and Strategic Thinking.
+    </p>
+  </noscript>
+
+  <footer class="page-footer">
+    <span>NS · Talent DNA · <span id="year">2026</span></span>
+    <a href="https://iridiumegg.github.io" class="footer-link">iridiumegg.github.io ↗</a>
+  </footer>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isCoarse = window.matchMedia('(pointer: coarse)').matches;
+  var hasGsap = typeof gsap !== 'undefined';
+  var hasST = typeof ScrollTrigger !== 'undefined';
+  if (hasGsap && hasST) gsap.registerPlugin(ScrollTrigger);
+
+  /* ── NAV state ── */
+  var nav = document.getElementById('nav');
+  function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 40); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ── Year ── */
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* ════════════════════════════════════════
+     TALENT DNA — CliftonStrengths 34 helix
+     ════════════════════════════════════════ */
+  function initStrengths() {
+    var canvas = document.getElementById('dnaHelix');
+    var metersEl = document.getElementById('dnaMeters');
+    var readoutEl = document.getElementById('dnaReadout');
+    if (!canvas || !metersEl || !readoutEl) return;
+
+    var DOMAINS = {
+      EX: { name: 'Executing',             color: '#00c8a0', blurb: 'Makes things happen' },
+      ST: { name: 'Strategic Thinking',    color: '#0078ff', blurb: 'Sharpens the decision' },
+      IN: { name: 'Influencing',           color: '#f5a623', blurb: 'Rallies others' },
+      RB: { name: 'Relationship Building',  color: '#9b6dff', blurb: 'Holds the team together' }
+    };
+
+    // rank order = array order (index 0 = #1 strongest)
+    var THEMES = [
+      { n: 'Strategic',        d: 'ST', b: 'Spots patterns and obstacles others miss, maps several routes forward, then commits to the most effective one.' },
+      { n: 'Achiever',         d: 'EX', b: 'Relentless drive and stamina — needs measurable progress every day and takes deep satisfaction in finishing.' },
+      { n: 'Arranger',         d: 'EX', b: 'Aligns people, schedules, and resources on the fly; thrives juggling many moving parts toward the best result.' },
+      { n: 'Ideation',         d: 'ST', b: 'Fascinated by ideas and the connections between them — a creative engine that reframes problems from new angles.' },
+      { n: 'Belief',           d: 'EX', b: 'Anchored by unchanging core values; brings honesty, conviction, and a strong sense of purpose to the work.' },
+      { n: 'Responsibility',   d: 'EX', b: 'Takes psychological ownership of every commitment — dependable, and a person of his word.' },
+      { n: 'Analytical',       d: 'ST', b: 'Searches for causes and evidence, pressure-testing ideas until the logic holds up and reality is clear.' },
+      { n: 'Developer',        d: 'RB', b: 'Sees raw potential in people and invests in it, noticing and encouraging every small sign of progress.' },
+      { n: 'Learner',          d: 'ST', b: 'Driven by the process of learning itself — quick to absorb new technology and stay on the cutting edge.' },
+      { n: 'Futuristic',       d: 'ST', b: 'Vividly imagines what could be and uses that vision to energize and pull others toward a better tomorrow.' },
+      { n: 'Focus',            d: 'EX', b: 'Sets a direction and follows through, correcting course as needed to stay on track.' },
+      { n: 'Significance',     d: 'IN', b: 'Wants the work to matter and make a visible, lasting impact.' },
+      { n: 'Woo',              d: 'IN', b: 'Enjoys meeting new people and winning them over.' },
+      { n: 'Positivity',       d: 'RB', b: 'Brings contagious energy and optimism that lifts a team.' },
+      { n: 'Discipline',       d: 'EX', b: 'Creates order and predictability through routine and structure.' },
+      { n: 'Communication',    d: 'IN', b: 'Turns thoughts into clear words — a natural explainer and presenter.' },
+      { n: 'Maximizer',        d: 'IN', b: 'Pushes good toward great; never settles for "good enough".' },
+      { n: 'Consistency',      d: 'EX', b: 'Treats people fairly with clear, repeatable rules everyone can follow.' },
+      { n: 'Relator',          d: 'RB', b: 'Does his best work alongside people he knows and trusts.' },
+      { n: 'Includer',         d: 'RB', b: 'Notices who is left out and makes the effort to bring them in.' },
+      { n: 'Restorative',      d: 'EX', b: 'Drawn to broken things — figures out what is wrong and resolves it.' },
+      { n: 'Self-Assurance',   d: 'IN', b: 'Trusts his own judgment and inner compass under pressure.' },
+      { n: 'Empathy',          d: 'RB', b: 'Senses what others are feeling, often before they say it.' },
+      { n: 'Individualization', d: 'RB', b: 'Reads each person\'s unique qualities and fits them together productively.' },
+      { n: 'Input',            d: 'ST', b: 'Collects information, tools, and resources worth keeping for later.' },
+      { n: 'Command',          d: 'IN', b: 'Takes control and makes the call when a situation needs one.' },
+      { n: 'Intellection',     d: 'ST', b: 'Enjoys deep, introspective thinking and intellectual discussion.' },
+      { n: 'Competition',      d: 'IN', b: 'Measures progress against others and plays to win.' },
+      { n: 'Context',          d: 'ST', b: 'Understands the present by studying how it came to be.' },
+      { n: 'Harmony',          d: 'RB', b: 'Looks for consensus and practical common ground over friction.' },
+      { n: 'Deliberative',     d: 'EX', b: 'Weighs risk carefully and moves forward with serious care.' },
+      { n: 'Connectedness',    d: 'RB', b: 'Sees the links between things — few events are coincidences.' },
+      { n: 'Activator',        d: 'IN', b: 'Turns talk into action and wants to start now, not later.' },
+      { n: 'Adaptability',     d: 'RB', b: 'Goes with the flow and takes things as they come, one day at a time.' }
+    ];
+    var N = THEMES.length;
+
+    /* — domain meters — */
+    var scores = { EX: 0, ST: 0, IN: 0, RB: 0 };
+    var counts  = { EX: 0, ST: 0, IN: 0, RB: 0 };
+    var totalW  = 0;
+    THEMES.forEach(function (t, i) {
+      var w = N - i;
+      scores[t.d] += w;
+      counts[t.d] += 1;
+      totalW += w;
+    });
+    var order = Object.keys(DOMAINS).sort(function (a, b) { return scores[b] - scores[a]; });
+
+    order.forEach(function (k) {
+      var dom = DOMAINS[k];
+      var pct = Math.round(scores[k] / totalW * 100);
+      var row = document.createElement('div');
+      row.className = 'dna-meter';
+      row.setAttribute('data-domain', k);
+      row.innerHTML =
+        '<div class="dna-meter-top">' +
+          '<span class="dna-meter-name"><i style="background:' + dom.color + '"></i>' + dom.name + '</span>' +
+          '<span class="dna-meter-pct">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="dna-meter-track"><span class="dna-meter-fill" data-pct="' + pct + '" style="background:' + dom.color + '"></span></div>' +
+        '<p class="dna-meter-desc">' + dom.blurb + ' · ' + counts[k] + ' themes</p>';
+      metersEl.appendChild(row);
+    });
+    var meterFills = metersEl.querySelectorAll('.dna-meter-fill');
+
+    function fillMeters(animate) {
+      meterFills.forEach(function (f) {
+        var pct = f.getAttribute('data-pct') + '%';
+        if (animate && hasGsap) gsap.fromTo(f, { width: '0%' }, { width: pct, duration: 1.1, ease: 'power3.out' });
+        else f.style.width = pct;
+      });
+    }
+    if (!reducedMotion && hasGsap && hasST) {
+      ScrollTrigger.create({ trigger: metersEl, start: 'top 85%', once: true, onEnter: function () { fillMeters(true); } });
+    } else {
+      fillMeters(false);
+    }
+
+    /* — domain hover → strand highlight — */
+    var activeDomain = null;
+    metersEl.querySelectorAll('.dna-meter').forEach(function (row) {
+      var k = row.getAttribute('data-domain');
+      row.addEventListener('mouseenter', function () {
+        activeDomain = k;
+        metersEl.classList.add('dimmed');
+        row.classList.add('active');
+        if (!running) draw(lastT);
+      });
+      row.addEventListener('mouseleave', function () {
+        activeDomain = null;
+        metersEl.classList.remove('dimmed');
+        row.classList.remove('active');
+        if (!running) draw(lastT);
+      });
+    });
+
+    /* — readout card — */
+    var current = -1;
+    function renderReadout(i) {
+      if (i === current) return;
+      current = i;
+      var t = THEMES[i], dom = DOMAINS[t.d];
+      readoutEl.innerHTML =
+        '<div class="dna-rank" style="color:' + dom.color + '"><span class="dna-rk-hash">#</span>' + (i + 1) + '</div>' +
+        '<div class="dna-rd-body">' +
+          '<div class="dna-rd-head">' +
+            '<span class="dna-rd-name">' + t.n + '</span>' +
+            '<span class="dna-pill" style="color:' + dom.color + ';border-color:' + dom.color + '">' + dom.name + '</span>' +
+          '</div>' +
+          '<p class="dna-rd-desc">' + t.b + '</p>' +
+        '</div>';
+      if (hasGsap && !reducedMotion) gsap.fromTo(readoutEl.querySelector('.dna-rd-body'), { opacity: .25, x: 8 }, { opacity: 1, x: 0, duration: .35, ease: 'power2.out' });
+    }
+
+    /* — canvas double helix — */
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+    var nodes = [];
+    var selIndex = 0;
+    var hoverIndex = null;
+    var lastT = 0;
+    var running = false;
+
+    function resize() {
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width  = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!running) draw(lastT);
+    }
+
+    function hexA(hex, a) {
+      var n = parseInt(hex.slice(1), 16);
+      return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
+    }
+
+    function draw(time) {
+      lastT = time;
+      ctx.clearRect(0, 0, W, H);
+      var top = 54, bot = H - 40;
+      var cx  = W * 0.5;
+      var amp = Math.min(W * 0.30, 145);
+      var turns = 2.35;
+      nodes.length = 0;
+
+      var pts = [];
+      for (var i = 0; i < N; i++) {
+        var tt  = i / (N - 1);
+        var y   = top + tt * (bot - top);
+        var ang = tt * turns * Math.PI * 2 + time;
+        var fz  = Math.sin(ang);
+        var fx  = cx + amp * Math.cos(ang);
+        var bx  = cx - amp * Math.cos(ang);
+        var bz  = -fz;
+        pts.push({ i: i, y: y, fx: fx, bx: bx, fz: fz, bz: bz, d: THEMES[i].d });
+      }
+
+      // backbones
+      function strand(key, base) {
+        ctx.beginPath();
+        for (var j = 0; j < pts.length; j++) {
+          var p = pts[j];
+          if (j === 0) ctx.moveTo(p[key], p.y); else ctx.lineTo(p[key], p.y);
+        }
+        ctx.strokeStyle = base;
+        ctx.lineWidth   = 1.4;
+        ctx.stroke();
+      }
+      strand('bx', 'rgba(120,140,160,.16)');
+      strand('fx', 'rgba(150,170,190,.28)');
+
+      // rungs + back nodes
+      for (var r = 0; r < pts.length; r++) {
+        var p2  = pts[r];
+        var col = DOMAINS[p2.d].color;
+        var dim = activeDomain && activeDomain !== p2.d;
+        var depth = (p2.fz + 1) / 2;
+        var ra  = (0.10 + 0.18 * depth) * (dim ? 0.22 : 1);
+        ctx.beginPath();
+        ctx.moveTo(p2.fx, p2.y);
+        ctx.lineTo(p2.bx, p2.y);
+        ctx.strokeStyle = hexA(col, ra);
+        ctx.lineWidth   = 1.2;
+        ctx.stroke();
+        var bdepth = (p2.bz + 1) / 2;
+        ctx.beginPath();
+        ctx.arc(p2.bx, p2.y, 1.6 + 1.2 * bdepth, 0, Math.PI * 2);
+        ctx.fillStyle = hexA(col, (0.25 + 0.3 * bdepth) * (dim ? 0.2 : 1));
+        ctx.fill();
+      }
+
+      // front nodes
+      for (var f = 0; f < pts.length; f++) {
+        var p3    = pts[f];
+        var dom   = DOMAINS[p3.d];
+        var top10 = p3.i < 10;
+        var dpt   = (p3.fz + 1) / 2;
+        var dimmed = activeDomain && activeDomain !== p3.d;
+        var rad   = (top10 ? 5.4 : 3.2) * (0.72 + 0.28 * dpt);
+        var isCur = (hoverIndex === p3.i) || (hoverIndex === null && selIndex === p3.i);
+        var alpha = (0.4 + 0.6 * dpt) * (dimmed ? 0.18 : 1);
+
+        nodes.push({ i: p3.i, x: p3.fx, y: p3.y, r: rad });
+
+        if (top10 && !dimmed) { ctx.shadowColor = dom.color; ctx.shadowBlur = 12 * dpt + 4; }
+        else { ctx.shadowBlur = 0; }
+
+        ctx.beginPath();
+        ctx.arc(p3.fx, p3.y, isCur ? rad + 2.4 : rad, 0, Math.PI * 2);
+        ctx.fillStyle = hexA(dom.color, isCur ? 1 : alpha);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if (isCur) {
+          ctx.beginPath();
+          ctx.arc(p3.fx, p3.y, rad + 7, 0, Math.PI * 2);
+          ctx.strokeStyle = hexA(dom.color, 0.9);
+          ctx.lineWidth   = 1.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    var t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    function loop() {
+      if (!running) return;
+      var time = (performance.now() - t0) / 1000;
+      draw(time * 0.32);
+      requestAnimationFrame(loop);
+    }
+    function start() { if (running || reducedMotion) return; running = true; requestAnimationFrame(loop); }
+    function stop()  { running = false; }
+
+    /* — pointer interaction — */
+    var hint = document.getElementById('dnaHint');
+    function pick(clientX, clientY) {
+      var rect = canvas.getBoundingClientRect();
+      var x = clientX - rect.left, y = clientY - rect.top;
+      var best = null, bestD = 1e9;
+      for (var i = 0; i < nodes.length; i++) {
+        var n  = nodes[i];
+        var dx = n.x - x, dy = n.y - y, dd = dx * dx + dy * dy;
+        var hit = Math.max(n.r + 7, 13);
+        if (dd < hit * hit && dd < bestD) { bestD = dd; best = n.i; }
+      }
+      return best;
+    }
+
+    if (!isCoarse) {
+      canvas.addEventListener('mousemove', function (e) {
+        var hit = pick(e.clientX, e.clientY);
+        hoverIndex = hit;
+        canvas.style.cursor = hit !== null ? 'pointer' : 'default';
+        if (hit !== null) { renderReadout(hit); if (hint) hint.classList.add('gone'); }
+        else renderReadout(selIndex);
+        if (!running) draw(lastT);
+      });
+      canvas.addEventListener('mouseleave', function () {
+        hoverIndex = null;
+        renderReadout(selIndex);
+        if (!running) draw(lastT);
+      });
+      canvas.addEventListener('click', function (e) {
+        var hit = pick(e.clientX, e.clientY);
+        if (hit !== null) { selIndex = hit; renderReadout(hit); }
+      });
+    } else {
+      canvas.addEventListener('touchstart', function (e) {
+        var tch = e.touches[0];
+        if (!tch) return;
+        var hit = pick(tch.clientX, tch.clientY);
+        if (hit !== null) {
+          selIndex = hit; hoverIndex = null; renderReadout(hit);
+          if (hint) hint.classList.add('gone');
+          if (!running) draw(lastT);
+        }
+      }, { passive: true });
+    }
+
+    window.addEventListener('resize', resize);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { en.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.08 }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState !== 'visible') stop(); else start();
+    });
+
+    resize();
+    renderReadout(0);
+    if (reducedMotion) draw(0.6); else start();
+  }
+
+  initStrengths();
+})();
+</script>
+</body>
+</html>
