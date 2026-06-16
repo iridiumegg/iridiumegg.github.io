@@ -734,21 +734,27 @@ a { color: inherit; }
     }
 
     if (!isCoarse) {
+      var lastHover = null;
       canvas.addEventListener('mousemove', function (e) {
         var hit = pick(e.clientX, e.clientY);
         hoverIndex = hit;
         canvas.style.cursor = hit !== null ? 'pointer' : 'default';
-        if (hit !== null) { renderReadout(hit); if (hint) hint.classList.add('gone'); }
-        else renderReadout(selIndex);
+        if (hit !== null) {
+          lastHover = hit;
+          renderReadout(hit);
+          if (hint) hint.classList.add('gone');
+        }
         if (!running) draw(lastT);
       });
       canvas.addEventListener('mouseleave', function () {
         hoverIndex = null;
+        lastHover = null;
         renderReadout(selIndex);
         if (!running) draw(lastT);
       });
       canvas.addEventListener('click', function (e) {
         var hit = pick(e.clientX, e.clientY);
+        if (hit === null) hit = lastHover;
         if (hit !== null) { selIndex = hit; renderReadout(hit); }
       });
     } else {
