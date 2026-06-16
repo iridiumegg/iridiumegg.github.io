@@ -33,7 +33,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; overflow-x: clip; }
+html { scroll-behavior: smooth; overflow-x: clip; scrollbar-gutter: stable; }
 
 body {
   background: var(--bg);
@@ -301,7 +301,8 @@ a { color: inherit; }
   background: rgba(19, 22, 27, .66);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  min-height: 132px;
+  height: 148px;
+  overflow: hidden;
 }
 .dna-rank {
   font-family: 'Syne', sans-serif;
@@ -345,6 +346,10 @@ a { color: inherit; }
   color: var(--dim);
   font-size: 13px;
   line-height: 1.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ── FOOTER ── */
